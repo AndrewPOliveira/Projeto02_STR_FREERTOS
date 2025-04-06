@@ -23,7 +23,7 @@ void vRobo3(void *argument);
 int main(void){
     xTaskCreate(&vRobo1, "Start Robo1", 1024, NULL, 1, NULL);
     xTaskCreate(&vRobo2, "Start Robo2", 1024, NULL, 1, NULL);
-    xTaskCreate(&vRobo3, "Start Robo3", 1024, NULL, 1, NULL);
+    xTaskCreate(&vRobo3, "Start Robo3", 1024, NULL, 2, NULL);
     xTaskCreate(&vMaquina1, "Start Maquina1", 1024, NULL, 1, NULL);
     vTaskStartScheduler();
     return 0;
@@ -62,13 +62,13 @@ void vMaquina1(void *argument)
 		  if(contador ==1)
 		  {
 			  printf("[M1] Processando produto...\r\n");
-		  }else if (contador>1500)
+		  }else if (contador==1500)
 		  {
 			  printf("[M1] Produto processado.\r\n");
 			  flag_produto1 = 1;
-			  contador = 0;
 		  }
-
+	  }else{
+		contador = 0;
 	  }
     vTaskDelay(pdMS_TO_TICKS(1));;
   }
@@ -93,7 +93,6 @@ void vRobo2(void *argument){
 			  printf("[R2] Pegando produto de M1...\r\n");
 		  else if(contador ==100)
 		  {
-			printf("[M1] Liberada.");
 			  flag_retira_produto1 = 0;
 			  flag_Maquina1 = 0;
 			  flag_produto1 = 0;
@@ -126,7 +125,6 @@ void vRobo3(void *argument){
 			  printf("[R3] Pegando produto de M1...\r\n");
 		  else if(contador ==100)
 		  {
-			printf("[M1] Liberada.");
 			  flag_retira_produto1 = 0;
 			  flag_Maquina1 = 0;
 			  flag_produto1 = 0;
