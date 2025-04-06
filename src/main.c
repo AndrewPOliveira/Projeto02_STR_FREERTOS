@@ -15,21 +15,21 @@ int flag_Maquina1 =0, flag_produto1 =0, flag_robo2 = 0, flag_robo3 = 0;
 int flag_retira_produto1 = 0;
 
 
-void Start_Robo1(void *argument);
-void Start_Maquina1(void *argument);
-void Start_Robo2(void *argument);
-void Start_Robo3(void *argument);
+void vRobo1(void *argument);
+void vMaquina1(void *argument);
+void vRobo2(void *argument);
+void vRobo3(void *argument);
 
 int main(void){
-    xTaskCreate(&Start_Robo1, "Start Robo1", 1024, NULL, 1, NULL);
-    xTaskCreate(&Start_Robo2, "Start Robo2", 1024, NULL, 1, NULL);
-    xTaskCreate(&Start_Robo3, "Start Robo3", 1024, NULL, 1, NULL);
-    xTaskCreate(&Start_Maquina1, "Start Maquina1", 1024, NULL, 1, NULL);
+    xTaskCreate(&vRobo1, "Start Robo1", 1024, NULL, 1, NULL);
+    xTaskCreate(&vRobo2, "Start Robo2", 1024, NULL, 1, NULL);
+    xTaskCreate(&vRobo3, "Start Robo3", 1024, NULL, 1, NULL);
+    xTaskCreate(&vMaquina1, "Start Maquina1", 1024, NULL, 1, NULL);
     vTaskStartScheduler();
     return 0;
 }
 
-void Start_Robo1(void *argument){
+void vRobo1(void *argument){
   static int contador = 0;
   for(;;){
 	  if(!flag_Maquina1){
@@ -61,7 +61,7 @@ void Start_Robo1(void *argument){
   }
 }
 
-void Start_Maquina1(void *argument)
+void vMaquina1(void *argument)
 {
   static int contador = 0;
   for(;;){
@@ -81,12 +81,12 @@ void Start_Maquina1(void *argument)
 	  }
     vTaskDelay(pdMS_TO_TICKS(100));;
   }
-  /* USER CODE END Start_Maquina1 */
+  /* USER CODE END vMaquina1 */
 }
 
 
-/* USER CODE END Header_Start_Robo2 */
-void Start_Robo2(void *argument){
+/* USER CODE END Header_vRobo2 */
+void vRobo2(void *argument){
   static int contador = 0;
   for(;;){
 	  if(flag_produto1 && !flag_robo2 && !flag_retira_produto1)
@@ -126,7 +126,7 @@ void Start_Robo2(void *argument){
 	  vTaskDelay(pdMS_TO_TICKS(100));;
     }
 }
-void Start_Robo3(void *argument){
+void vRobo3(void *argument){
   static int contador = 0;
   for(;;){
 	  if(flag_produto1 && !flag_robo3 && !flag_retira_produto1)
