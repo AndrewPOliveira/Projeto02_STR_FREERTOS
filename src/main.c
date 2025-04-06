@@ -10,17 +10,20 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semaphore.h"
-
+#include "semphr.h"
 int flag_Maquina1 =0, flag_produto1 =0, flag_robo2 = 0, flag_robo3 = 0;
 int flag_retira_produto1 = 0;
 
-
+SemaphoreHandle_t xSemaphore ;
 void vRobo1(void *argument);
 void vMaquina1(void *argument);
 void vRobo2(void *argument);
 void vRobo3(void *argument);
 
 int main(void){
+	
+	xSemaphore = xSemaphoreCreateBinary();
+	xSemaphoreGive( xSemaphore );
     xTaskCreate(&vRobo1, "Start Robo1", 1024, NULL, 1, NULL);
     xTaskCreate(&vRobo2, "Start Robo2", 1024, NULL, 1, NULL);
     xTaskCreate(&vRobo3, "Start Robo3", 1024, NULL, 2, NULL);
@@ -32,8 +35,9 @@ int main(void){
 void vRobo1(void *argument){
   static int contador = 0;
   for(;;){
-	  if(!flag_Maquina1)
-	  {
+	  printf("%d\n",uxSemaphoreGetCount(xSemaphore));
+	  if(xSemaphoreTake( xSemaphore,  portMAX_DELAY  ) == pdTRUE){
+		printf("%d",contador);
 		contador++;
 		sleep(1);
 		  if(contador==1)
@@ -44,6 +48,7 @@ void vRobo1(void *argument){
 			  printf("[R1] Inserindo produto em M1.\r\n");
 		  else if(contador> 700)
 		  {
+			//   xSemaphoreGive( xSemaphore );
 			  flag_Maquina1 = 1;
 			  contador =0;
 		  }
