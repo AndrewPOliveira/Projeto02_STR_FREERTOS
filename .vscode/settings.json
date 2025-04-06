@@ -4,7 +4,8 @@
         "task.h": "c",
         "projdefs.h": "c",
         "unistd.h": "c",
-        "stdarg.h": "c"
+        "stdarg.h": "c",
+        "semaphore.h": "c"
     },
     "notebook.variablesView": true,
     "workbench.editor.customLabels.patterns": {

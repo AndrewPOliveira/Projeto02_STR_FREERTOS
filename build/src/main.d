@@ -7,4 +7,7 @@ build/./src/main.o: src/main.c \
  /workspaces/Projeto02_STR_FREERTOS/FreeRTOSv202212.01/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/portmacro.h \
  /workspaces/Projeto02_STR_FREERTOS/FreeRTOSv202212.01/FreeRTOS/Source/include/mpu_wrappers.h \
  /workspaces/Projeto02_STR_FREERTOS/FreeRTOSv202212.01/FreeRTOS/Source/include/task.h \
- /workspaces/Projeto02_STR_FREERTOS/FreeRTOSv202212.01/FreeRTOS/Source/include/list.h
+ /workspaces/Projeto02_STR_FREERTOS/FreeRTOSv202212.01/FreeRTOS/Source/include/list.h \
+ /workspaces/Projeto02_STR_FREERTOS/FreeRTOSv202212.01/FreeRTOS/Source/include/semphr.h \
+ /workspaces/Projeto02_STR_FREERTOS/FreeRTOSv202212.01/FreeRTOS/Source/include/queue.h \
+ /workspaces/Projeto02_STR_FREERTOS/FreeRTOSv202212.01/FreeRTOS/Source/include/task.h
