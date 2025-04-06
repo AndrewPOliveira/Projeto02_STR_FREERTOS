@@ -10,5 +10,6 @@
     "notebook.variablesView": true,
     "workbench.editor.customLabels.patterns": {
         "FREERTOS_PATH": "C:\\Users\\ValmyrSilva07\\FreeRTOSv10.0.1"
-    }
+    },
+    "git.ignoreLimitWarning": true
 }

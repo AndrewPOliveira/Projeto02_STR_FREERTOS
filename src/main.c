@@ -69,7 +69,7 @@ void vRobo1(void *argument){
       {
         pegou_maquina = pdTRUE;
         contador = 0;
-        printf("[R1] M1 vazio, R1 trabalhando...\n");
+        printf("\033[0m\033[33;44m[R1] M1 vazio, R1 trabalhando...\033[0m\n");
       }
     }
 
@@ -78,17 +78,17 @@ void vRobo1(void *argument){
       contador++;
       sleep(1);
       if(contador==1)
-        printf("[R1] Pegando produto da entrada...\r\n");
+        printf("\033[0m\033[33;44m[R1] Pegando produto da entrada...\033[0m\r\n");
       else if(contador==100)
-        printf("[R1] Movendo produto da entrada para M1...\r\n");
+        printf("\033[0m\033[33;44m[R1] Movendo produto da entrada para M1...\033[0m\r\n");
       else if(contador==600)
-        printf("[R1] Inserindo produto em M1.\r\n");
+        printf("\033[0m\033[33;44m[R1] Inserindo produto em M1.\033[0m\r\n");
       else if(contador > 700)
       {
         xSemaphoreGive(sem_Maquina1);
         pegou_maquina = pdFALSE;
         contador = 0;
-        printf("[R1] Entregue a M1.\n");
+        printf("\033[0m\033[33;44m[R1] Entregue a M1.\033[0m\n");
       }
     }
 
@@ -108,7 +108,7 @@ void vMaquina1(void *argument)
       {
         ocupando = pdTRUE;
         contador = 0;
-        printf("[M1] Produto recebido. Iniciando processamento...\r\n");
+        printf("\033[0m\033[31m[M1] Produto recebido. Iniciando processamento...\033[0m\r\n");
       }
     }
 
@@ -119,7 +119,7 @@ void vMaquina1(void *argument)
 
       if (contador == 1500)
       {
-        printf("[M1] Produto processado.\r\n");
+        printf("\033[0m\033[31m[M1] Produto processado.\033[0m\r\n");
         xSemaphoreGive(sem_Produto1);       // Sinaliza que produto está pronto
         xSemaphoreGive(sem_Maquina1);       // Libera máquina
         ocupando = pdFALSE;
@@ -150,11 +150,11 @@ void vRobo2(void *argument){
 		sleep(1);
 		contador++;
 		if(contador == 1)
-		  printf("[R2] Pegando produto de M1...\r\n");
+		  printf("\033[4;35m[R2] Pegando produto de M1...\033[0m\\r\n");
 		else if(contador == 100)
-		  printf("[R2] Movendo produto de M1 para M2...\r\n");
+		  printf("\033[4;35m[R2] Movendo produto de M1 para M2...\033[0m\\r\n");
 		else if(contador == 600)
-		  printf("[R2] Inserindo produto em M2.\r\n");
+		  printf("\033[4;35m[R2] Inserindo produto em M2.\033[0m\\r\n");
 		else if(contador > 700)
 		{
       pegou = pdFALSE;
@@ -219,7 +219,7 @@ void vRobo2(void *argument){
         {
           ocupando = pdTRUE;
           contador = 0;
-          printf("[M2] Produto recebido. Iniciando processamento...\r\n");
+          printf("\033[0;92m[M2] Produto recebido. Iniciando processamento...\033[0m\\r\n");
         }
       }
   
@@ -230,7 +230,7 @@ void vRobo2(void *argument){
   
         if (contador == 1500)
         {
-          printf("[M2] Produto processado.\r\n");
+          printf("\033[0;92m[M2] Produto processado.\033[0m\\r\n");
           xSemaphoreGive(sem_Produto2);     // Produto pronto
           ocupando = pdFALSE;
         }
@@ -253,7 +253,7 @@ void vRobo2(void *argument){
         {
           ocupando = pdTRUE;
           contador = 0;
-          printf("[M3] Produto recebido. Iniciando processamento...\r\n");
+          printf("\033[46m[M3] Produto recebido. Iniciando processamento...\033[0m\\r\n");
         }
       }
   
@@ -264,7 +264,7 @@ void vRobo2(void *argument){
   
         if (contador == 1500)
         {
-          printf("[M3] Produto processado.\r\n");
+          printf("\033[46m[M3] Produto processado.\033[0m\\r\n");
           xSemaphoreGive(sem_Produto3);     // Produto pronto
           ocupando = pdFALSE;
         }
@@ -302,16 +302,16 @@ void vRobo4(void *argument){
 		sleep(1);
 		contador++;
 		if(contador == 1)
-		  printf("[R4] Pegando produto de M2...\r\n");
+		  printf("\033[0;103m[R4] Pegando produto de M2...\033[0m\\r\n");
 		else if(contador == 100)
-		  printf("[R4] Movendo produto de M2 para saida...\r\n");
+		  printf("\033[0;103m[R4] Movendo produto de M2 para saida...\033[0m\\r\n");
 		else if(contador == 600)
-		  printf("[R4] Inserindo produto na saida.\r\n");
+		  printf("\033[0;103m[R4] Inserindo produto na saida.\033[0m\\r\n");
 		else if(contador > 700)
 		{
       pegou = pdFALSE;
       contador = 0;
-      printf("[R4] Produto entregue na saída.\r\n");
+      printf("\033[0;103m[R4] Produto entregue na saída.\033[0m\\r\n");
       xSemaphoreGive(sem_Maquina2);
 		}
 	  }
@@ -320,16 +320,16 @@ void vRobo4(void *argument){
 		sleep(1);
 		contador++;
 		if(contador == 1)
-		  printf("[R4] Pegando produto de M3...\r\n");
+		  printf("\033[0;101m[R4] Pegando produto de M3...\033[0m\\r\n");
 		else if(contador == 100)
-		  printf("[R4] Movendo produto de M3 para saida...\r\n");
+		  printf("\033[0;101m[R4] Movendo produto de M3 para saida...\033[0m\\r\n");
 		else if(contador == 600)
-		  printf("[R4] Inserindo produto na saida.\r\n");
+		  printf("\033[0;101m[R4] Inserindo produto na saida.\033[0m\\r\n");
 		else if(contador > 700)
 		{
       pegou = pdFALSE;
       contador = 0;
-      printf("[R4] Produto entregue na saída.\r\n");
+      printf("\033[0;101m[R4] Produto entregue na saída.\033[0m\\r\n");
       xSemaphoreGive(sem_Maquina3);
 		}
 	  }
