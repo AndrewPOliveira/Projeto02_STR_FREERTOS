@@ -13,29 +13,46 @@
 #include "semphr.h"
 
 SemaphoreHandle_t sem_Maquina1 = NULL, sem_Produto1 = NULL, sem_AcessoRetirada = NULL;
+SemaphoreHandle_t sem_Maquina2 = NULL, sem_Produto2 = NULL;
+SemaphoreHandle_t sem_Maquina3 = NULL, sem_Produto3 = NULL;
+SemaphoreHandle_t sem_ProdutoDepositado_M2 = NULL, sem_ProdutoDepositado_M3 = NULL;
 
 
 void vRobo1(void *argument);
-void vMaquina1(void *argument);
 void vRobo2(void *argument);
 void vRobo3(void *argument);
+void vRobo4(void *argument);
+void vMaquina1(void *argument);
+void vMaquina2(void *argument);
+void vMaquina3(void *argument);
+
 
 int main(void){
 
 	sem_Maquina1 = xSemaphoreCreateBinary();
 	sem_Produto1 = xSemaphoreCreateBinary();
+  sem_Maquina2 = xSemaphoreCreateBinary();
+	sem_Produto2 = xSemaphoreCreateBinary();
+  sem_Maquina3 = xSemaphoreCreateBinary();
+	sem_Produto3 = xSemaphoreCreateBinary();
+  sem_ProdutoDepositado_M2 = xSemaphoreCreateBinary();
+  sem_ProdutoDepositado_M3 = xSemaphoreCreateBinary();
 	sem_AcessoRetirada = xSemaphoreCreateBinary();
 
 	// Inicialmente a máquina está livre:
 	xSemaphoreGive(sem_Maquina1);
-	//xSemaphoreGive(sem_Produto1);
+  xSemaphoreGive(sem_Maquina2);
+  xSemaphoreGive(sem_Maquina3);
 	// Acesso à retirada também liberado:
 	xSemaphoreGive(sem_AcessoRetirada);
 
     xTaskCreate(&vRobo1, "Start Robo1", 1024, NULL, 1, NULL);
-    xTaskCreate(&vRobo2, "Start Robo2", 1024, NULL, 1, NULL);
-    xTaskCreate(&vRobo3, "Start Robo3", 1024, NULL, 2, NULL);
+    xTaskCreate(&vRobo2, "Start Robo2", 1024, NULL, 2, NULL);
+    xTaskCreate(&vRobo3, "Start Robo3", 1024, NULL, 3, NULL);
+    xTaskCreate(&vRobo4, "Start Robo4", 1024, NULL, 4, NULL);
     xTaskCreate(&vMaquina1, "Start Maquina1", 1024, NULL, 1, NULL);
+    xTaskCreate(&vMaquina2, "Start Maquina2", 1024, NULL, 2, NULL);
+    xTaskCreate(&vMaquina3, "Start Maquina3", 1024, NULL, 2, NULL);
     vTaskStartScheduler();
     return 0;
 }
@@ -120,13 +137,13 @@ void vRobo2(void *argument){
   
 	for(;;){
 	  if (!pegou && xSemaphoreTake(sem_Produto1, pdMS_TO_TICKS(1)) == pdTRUE)
-	  {
-		if (xSemaphoreTake(sem_AcessoRetirada, pdMS_TO_TICKS(1)) == pdTRUE)
-		{
-		  pegou = pdTRUE;
-		  contador = 0;
-		}
-	  }
+    {
+      if (xSemaphoreTake(sem_AcessoRetirada, pdMS_TO_TICKS(1)) == pdTRUE)
+      {
+        pegou = pdTRUE;
+        contador = 0;
+      }
+    }
   
 	  if (pegou)
 	  {
@@ -140,9 +157,10 @@ void vRobo2(void *argument){
 		  printf("[R2] Inserindo produto em M2.\r\n");
 		else if(contador > 700)
 		{
-		  pegou = pdFALSE;
-		  contador = 0;
-		  xSemaphoreGive(sem_AcessoRetirada); // Libera acesso para outro robô
+      pegou = pdFALSE;
+      contador = 0;
+      xSemaphoreGive(sem_ProdutoDepositado_M2); // Notifica M2
+      xSemaphoreGive(sem_AcessoRetirada);
 		}
 	  }
   
@@ -154,7 +172,8 @@ void vRobo2(void *argument){
 	static BaseType_t pegou = pdFALSE;
   
 	for(;;){
-	  if (!pegou && xSemaphoreTake(sem_Produto1, pdMS_TO_TICKS(1)) == pdTRUE)
+	  if (!pegou && xSemaphoreTake(sem_Produto1, pdMS_TO_TICKS(1)) == pdTRUE  
+        && xSemaphoreTake(sem_Maquina3, pdMS_TO_TICKS(1)) == pdTRUE)
 	  {
 		if (xSemaphoreTake(sem_AcessoRetirada, pdMS_TO_TICKS(1)) == pdTRUE)
 		{
@@ -175,6 +194,8 @@ void vRobo2(void *argument){
 		  printf("[R3] Inserindo produto em M3.\r\n");
 		else if (contador > 1000)
 		{
+      xSemaphoreGive(sem_ProdutoDepositado_M3); // Notifica a Máquina 3
+      xSemaphoreGive(sem_Maquina3);
 		  pegou = pdFALSE;
 		  contador = 0;
 		  xSemaphoreGive(sem_AcessoRetirada); // Libera acesso para outro robô
@@ -185,3 +206,134 @@ void vRobo2(void *argument){
 	}
   }
   
+  void vMaquina2(void *argument)
+  {
+    static int contador = 0;
+    static BaseType_t ocupando = pdFALSE;
+  
+    for (;;)
+    {
+      if (!ocupando)
+      {
+        if (xSemaphoreTake(sem_ProdutoDepositado_M2, pdMS_TO_TICKS(1)) == pdTRUE)
+        {
+          ocupando = pdTRUE;
+          contador = 0;
+          printf("[M2] Produto recebido. Iniciando processamento...\r\n");
+        }
+      }
+  
+      if (ocupando)
+      {
+        sleep(1);
+        contador++;
+  
+        if (contador == 1500)
+        {
+          printf("[M2] Produto processado.\r\n");
+          xSemaphoreGive(sem_Produto2);     // Produto pronto
+          ocupando = pdFALSE;
+        }
+      }
+  
+      vTaskDelay(pdMS_TO_TICKS(1));
+    }
+  }
+
+  void vMaquina3(void *argument)
+  {
+    static int contador = 0;
+    static BaseType_t ocupando = pdFALSE;
+  
+    for (;;)
+    {
+      if (!ocupando)
+      {
+        if (xSemaphoreTake(sem_ProdutoDepositado_M3, pdMS_TO_TICKS(1)) == pdTRUE)
+        {
+          ocupando = pdTRUE;
+          contador = 0;
+          printf("[M3] Produto recebido. Iniciando processamento...\r\n");
+        }
+      }
+  
+      if (ocupando)
+      {
+        sleep(1);
+        contador++;
+  
+        if (contador == 1500)
+        {
+          printf("[M3] Produto processado.\r\n");
+          xSemaphoreGive(sem_Produto3);     // Produto pronto
+          ocupando = pdFALSE;
+        }
+      }
+  
+      vTaskDelay(pdMS_TO_TICKS(1));
+    }
+  }
+
+void vRobo4(void *argument){
+  static int contador = 0;
+	static BaseType_t pegou = pdFALSE;
+  static int pegou_produto = 0;
+  
+	for(;;){
+    if (!pegou)
+    {
+      if(xSemaphoreTake(sem_Produto2, pdMS_TO_TICKS(1)) == pdTRUE)
+      {
+        pegou = pdTRUE;
+        contador = 0;
+        pegou_produto = 2;
+      }
+      else if(xSemaphoreTake(sem_Produto3, pdMS_TO_TICKS(1)) == pdTRUE)
+      {
+        pegou = pdTRUE;
+        contador = 0;
+        pegou_produto = 3;
+      }
+
+    }
+  
+	  if (pegou_produto == 2 && pegou)
+	  {
+		sleep(1);
+		contador++;
+		if(contador == 1)
+		  printf("[R4] Pegando produto de M2...\r\n");
+		else if(contador == 100)
+		  printf("[R4] Movendo produto de M2 para saida...\r\n");
+		else if(contador == 600)
+		  printf("[R4] Inserindo produto na saida.\r\n");
+		else if(contador > 700)
+		{
+      pegou = pdFALSE;
+      contador = 0;
+      printf("[R4] Produto entregue na saída.\r\n");
+      xSemaphoreGive(sem_Maquina2);
+		}
+	  }
+    else if (pegou_produto == 3 && pegou)
+	  {
+		sleep(1);
+		contador++;
+		if(contador == 1)
+		  printf("[R4] Pegando produto de M3...\r\n");
+		else if(contador == 100)
+		  printf("[R4] Movendo produto de M3 para saida...\r\n");
+		else if(contador == 600)
+		  printf("[R4] Inserindo produto na saida.\r\n");
+		else if(contador > 700)
+		{
+      pegou = pdFALSE;
+      contador = 0;
+      printf("[R4] Produto entregue na saída.\r\n");
+      xSemaphoreGive(sem_Maquina3);
+		}
+	  }
+	  vTaskDelay(pdMS_TO_TICKS(1));
+	}
+
+}
