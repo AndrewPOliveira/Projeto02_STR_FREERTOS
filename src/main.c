@@ -30,7 +30,7 @@ int main(void){
 }
 
 void Start_Robo1(void *argument){
-    static int contador = 0;
+  static int contador = 0;
   for(;;){
 	  if(!flag_Maquina1){
 		  if(contador <100)
@@ -59,16 +59,12 @@ void Start_Robo1(void *argument){
 	  }
     vTaskDelay(pdMS_TO_TICKS(100));;
   }
-  /* USER CODE END 5 */
 }
 
 void Start_Maquina1(void *argument)
 {
-  /* USER CODE BEGIN Start_Maquina1 */
-  /* Infinite loop */
-	static int contador = 0;
-  for(;;)
-  {
+  static int contador = 0;
+  for(;;){
 	  if(flag_Maquina1){
 		  if(contador <1500)
 		  {
@@ -90,13 +86,9 @@ void Start_Maquina1(void *argument)
 
 
 /* USER CODE END Header_Start_Robo2 */
-void Start_Robo2(void *argument)
-{
-  /* USER CODE BEGIN Start_Robo2 */
-  /* Infinite loop */
-	static int contador = 0;
-  for(;;)
-  {
+void Start_Robo2(void *argument){
+  static int contador = 0;
+  for(;;){
 	  if(flag_produto1 && !flag_robo2 && !flag_retira_produto1)
 	  {
 		  flag_robo2 = 1;
@@ -132,16 +124,11 @@ void Start_Robo2(void *argument)
 		  }
 	  }
 	  vTaskDelay(pdMS_TO_TICKS(100));;
-  }
-  /* USER CODE END Start_Robo2 */
+    }
 }
-void Start_Robo3(void *argument)
-{
-  /* USER CODE BEGIN Start_Robo3 */
-  /* Infinite loop */
-	static int contador = 0;
-  for(;;)
-  {
+void Start_Robo3(void *argument){
+  static int contador = 0;
+  for(;;){
 	  if(flag_produto1 && !flag_robo3 && !flag_retira_produto1)
 	  {
 		  flag_robo3 = 1;
@@ -178,5 +165,4 @@ void Start_Robo3(void *argument)
 	  }
 	  vTaskDelay(pdMS_TO_TICKS(100));;
   }
-  /* USER CODE END Start_Robo3 */
 }
