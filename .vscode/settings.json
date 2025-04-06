@@ -2,7 +2,9 @@
     "files.associations": {
         "freertos.h": "c",
         "task.h": "c",
-        "projdefs.h": "c"
+        "projdefs.h": "c",
+        "unistd.h": "c",
+        "stdarg.h": "c"
     },
     "notebook.variablesView": true,
     "workbench.editor.customLabels.patterns": {

@@ -1,3 +1,5 @@
+#define true 1
+#define false 0
 /* Standard includes. */
 #include <stdlib.h>
 #include <stdio.h>
@@ -7,34 +9,28 @@
 /* FreeRTOS kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
+#include "semaphore.h"
 
-void vTask1(void *pvParameters);
-void vTask2(void *pvParameters);
-
-int main(void)
-{
-    xTaskCreate(&vTask1, "Task 1", 1024, NULL, 1, NULL);
-    xTaskCreate(&vTask2, "Task 2", 1024, NULL, 1, NULL);
-
+void vRobo1(void *pvParameters);
+void vMaquina1(void *pvParameters);
+int main(void){
+    xTaskCreate(&vRobo1, "Robo 1", 1024, NULL, 1, NULL);
+    xTaskCreate(&vMaquina1, "Maquina1 2", 1024, NULL, 1, NULL);
     vTaskStartScheduler();
 
     return 0;
 }
 
-void vTask1(void *pvParameters)
-{
-    for (;;)
-    {
-        printf("Task 1\r\n");
-        vTaskDelay(pdMS_TO_TICKS(1000));
+void vRobo1(void *pvParameters){
+    while(true){
+        printf("Retirando insumos do deposito de entrada...\r\n");
+        vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
 
-void vTask2(void *pvParameters)
-{
-    for (;;)
-    {
-        printf("Task 2\r\n");
-        vTaskDelay(pdMS_TO_TICKS(1000));
+void vMaquina1(void *pvParameters){
+    while(true){
+        printf("...Colocando no deposito de entrada de M1\r\n");
+        vTaskDelay(pdMS_TO_TICKS(1500));
     }
 }
