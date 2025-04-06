@@ -32,32 +32,23 @@ int main(void){
 void vRobo1(void *argument){
   static int contador = 0;
   for(;;){
-	  if(!flag_Maquina1){
-		  if(contador <100)
-		  {
+	  if(!flag_Maquina1)
+	  {
+		contador++;
+		sleep(1);
+		  if(contador==1)
 			  printf("[R1] Pegando produto da entrada...\r\n");
-			  sleep(1);
-			  contador++;
-		  }
-		  else if(contador <600)
-		  {
+		  else if(contador==100)
 			  printf("[R1] Movendo produto da entrada para M1...\r\n");
-			  sleep(1);
-			  contador++;
-		  }
-		  else if(contador <700)
-		  {
+		  else if(contador==600)
 			  printf("[R1] Inserindo produto em M1.\r\n");
-			  sleep(1);
-			  contador++;
-		  }
-		  else
+		  else if(contador> 700)
 		  {
 			  flag_Maquina1 = 1;
 			  contador =0;
 		  }
 	  }
-    vTaskDelay(pdMS_TO_TICKS(100));;
+    vTaskDelay(pdMS_TO_TICKS(1));;
   }
 }
 
@@ -66,12 +57,12 @@ void vMaquina1(void *argument)
   static int contador = 0;
   for(;;){
 	  if(flag_Maquina1){
-		  if(contador <1500)
+		sleep(1);
+		contador++;
+		  if(contador ==1)
 		  {
 			  printf("[M1] Processando produto...\r\n");
-			  sleep(1);
-			  contador++;
-		  }else
+		  }else if (contador>1500)
 		  {
 			  printf("[M1] Produto processado.\r\n");
 			  flag_produto1 = 1;
@@ -79,7 +70,7 @@ void vMaquina1(void *argument)
 		  }
 
 	  }
-    vTaskDelay(pdMS_TO_TICKS(100));;
+    vTaskDelay(pdMS_TO_TICKS(1));;
   }
   /* USER CODE END vMaquina1 */
 }
@@ -96,34 +87,27 @@ void vRobo2(void *argument){
 	  }
 	  if(flag_robo2)
 	  {
-		  if(contador <100)
-		  {
+		contador++;
+		sleep(1);
+		  if(contador ==1)
 			  printf("[R2] Pegando produto de M1...\r\n");
-			  sleep(1);
-			  contador++;
-		  }
-		  else if(contador <600)
+		  else if(contador ==100)
 		  {
+			printf("[M1] Liberada.");
 			  flag_retira_produto1 = 0;
 			  flag_Maquina1 = 0;
 			  flag_produto1 = 0;
 			  printf("[R2] Movendo produto de M1 para M2...\r\n");
-			  sleep(1);
-			  contador++;
 		  }
-		  else if(contador <700)
-		  {
+		  else if(contador ==600)
 			  printf("[R2] Inserindo produto em M2.\r\n");
-			  sleep(1);
-			  contador++;
-		  }
-		  else
+		  else if(contador>700)
 		  {
 			  flag_robo2 = 0;
 			  contador =0;
 		  }
 	  }
-	  vTaskDelay(pdMS_TO_TICKS(100));;
+	  vTaskDelay(pdMS_TO_TICKS(1));;
     }
 }
 void vRobo3(void *argument){
@@ -136,33 +120,26 @@ void vRobo3(void *argument){
 	  }
 	  if(flag_robo3)
 	  {
-		  if(contador <100)
-		  {
+		contador++;
+		sleep(1);
+		  if(contador ==1)
 			  printf("[R3] Pegando produto de M1...\r\n");
-			  sleep(1);
-			  contador++;
-		  }
-		  else if(contador <900)
+		  else if(contador ==100)
 		  {
+			printf("[M1] Liberada.");
 			  flag_retira_produto1 = 0;
 			  flag_Maquina1 = 0;
 			  flag_produto1 = 0;
 			  printf("[R3] Movendo produto de M1 para M3...\r\n");
-			  sleep(1);
-			  contador++;
 		  }
-		  else if(contador <1000)
-		  {
+		  else if(contador ==900)
 			  printf("[R3] Inserindo produto em M3.\r\n");
-			  sleep(1);
-			  contador++;
-		  }
-		  else
+		  else if (contador > 1000)
 		  {
 			  flag_robo3 = 0;
 			  contador =0;
 		  }
 	  }
-	  vTaskDelay(pdMS_TO_TICKS(100));;
+	  vTaskDelay(pdMS_TO_TICKS(1));;
   }
 }
