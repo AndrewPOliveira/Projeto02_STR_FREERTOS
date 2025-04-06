@@ -11,26 +11,172 @@
 #include "task.h"
 #include "semaphore.h"
 
-void vRobo1(void *pvParameters);
-void vMaquina1(void *pvParameters);
-int main(void){
-    xTaskCreate(&vRobo1, "Robo 1", 1024, NULL, 1, NULL);
-    xTaskCreate(&vMaquina1, "Maquina1 2", 1024, NULL, 1, NULL);
-    vTaskStartScheduler();
+int flag_Maquina1 =0, flag_produto1 =0, flag_robo2 = 0, flag_robo3 = 0;
+int flag_retira_produto1 = 0;
 
+
+void Start_Robo1(void *argument);
+void Start_Maquina1(void *argument);
+void Start_Robo2(void *argument);
+void Start_Robo3(void *argument);
+
+int main(void){
+    xTaskCreate(&Start_Robo1, "Start Robo1", 1024, NULL, 1, NULL);
+    xTaskCreate(&Start_Robo2, "Start Robo2", 1024, NULL, 1, NULL);
+    xTaskCreate(&Start_Robo3, "Start Robo3", 1024, NULL, 1, NULL);
+    xTaskCreate(&Start_Maquina1, "Start Maquina1", 1024, NULL, 1, NULL);
+    vTaskStartScheduler();
     return 0;
 }
 
-void vRobo1(void *pvParameters){
-    while(true){
-        printf("Retirando insumos do deposito de entrada...\r\n");
-        vTaskDelay(pdMS_TO_TICKS(100));
-    }
+void Start_Robo1(void *argument){
+    static int contador = 0;
+  for(;;){
+	  if(!flag_Maquina1){
+		  if(contador <100)
+		  {
+			  printf("[R1] Pegando produto da entrada...\r\n");
+			  sleep(1);
+			  contador++;
+		  }
+		  else if(contador <600)
+		  {
+			  printf("[R1] Movendo produto da entrada para M1...\r\n");
+			  sleep(1);
+			  contador++;
+		  }
+		  else if(contador <700)
+		  {
+			  printf("[R1] Inserindo produto em M1.\r\n");
+			  sleep(1);
+			  contador++;
+		  }
+		  else
+		  {
+			  flag_Maquina1 = 1;
+			  contador =0;
+		  }
+	  }
+    vTaskDelay(pdMS_TO_TICKS(100));;
+  }
+  /* USER CODE END 5 */
 }
 
-void vMaquina1(void *pvParameters){
-    while(true){
-        printf("...Colocando no deposito de entrada de M1\r\n");
-        vTaskDelay(pdMS_TO_TICKS(1500));
-    }
+void Start_Maquina1(void *argument)
+{
+  /* USER CODE BEGIN Start_Maquina1 */
+  /* Infinite loop */
+	static int contador = 0;
+  for(;;)
+  {
+	  if(flag_Maquina1){
+		  if(contador <1500)
+		  {
+			  printf("[M1] Processando produto...\r\n");
+			  sleep(1);
+			  contador++;
+		  }else
+		  {
+			  printf("[M1] Produto processado.\r\n");
+			  flag_produto1 = 1;
+			  contador = 0;
+		  }
+
+	  }
+    vTaskDelay(pdMS_TO_TICKS(100));;
+  }
+  /* USER CODE END Start_Maquina1 */
+}
+
+
+/* USER CODE END Header_Start_Robo2 */
+void Start_Robo2(void *argument)
+{
+  /* USER CODE BEGIN Start_Robo2 */
+  /* Infinite loop */
+	static int contador = 0;
+  for(;;)
+  {
+	  if(flag_produto1 && !flag_robo2 && !flag_retira_produto1)
+	  {
+		  flag_robo2 = 1;
+		  flag_retira_produto1 = 1;
+	  }
+	  if(flag_robo2)
+	  {
+		  if(contador <100)
+		  {
+			  printf("[R2] Pegando produto de M1...\r\n");
+			  sleep(1);
+			  contador++;
+		  }
+		  else if(contador <600)
+		  {
+			  flag_retira_produto1 = 0;
+			  flag_Maquina1 = 0;
+			  flag_produto1 = 0;
+			  printf("[R2] Movendo produto de M1 para M2...\r\n");
+			  sleep(1);
+			  contador++;
+		  }
+		  else if(contador <700)
+		  {
+			  printf("[R2] Inserindo produto em M2.\r\n");
+			  sleep(1);
+			  contador++;
+		  }
+		  else
+		  {
+			  flag_robo2 = 0;
+			  contador =0;
+		  }
+	  }
+	  vTaskDelay(pdMS_TO_TICKS(100));;
+  }
+  /* USER CODE END Start_Robo2 */
+}
+void Start_Robo3(void *argument)
+{
+  /* USER CODE BEGIN Start_Robo3 */
+  /* Infinite loop */
+	static int contador = 0;
+  for(;;)
+  {
+	  if(flag_produto1 && !flag_robo3 && !flag_retira_produto1)
+	  {
+		  flag_robo3 = 1;
+		  flag_retira_produto1 = 1;
+	  }
+	  if(flag_robo3)
+	  {
+		  if(contador <100)
+		  {
+			  printf("[R3] Pegando produto de M1...\r\n");
+			  sleep(1);
+			  contador++;
+		  }
+		  else if(contador <900)
+		  {
+			  flag_retira_produto1 = 0;
+			  flag_Maquina1 = 0;
+			  flag_produto1 = 0;
+			  printf("[R3] Movendo produto de M1 para M3...\r\n");
+			  sleep(1);
+			  contador++;
+		  }
+		  else if(contador <1000)
+		  {
+			  printf("[R3] Inserindo produto em M3.\r\n");
+			  sleep(1);
+			  contador++;
+		  }
+		  else
+		  {
+			  flag_robo3 = 0;
+			  contador =0;
+		  }
+	  }
+	  vTaskDelay(pdMS_TO_TICKS(100));;
+  }
+  /* USER CODE END Start_Robo3 */
 }
