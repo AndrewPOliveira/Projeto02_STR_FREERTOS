@@ -231,7 +231,7 @@ void vMaquina3(void * argument) {
       sleep(1);
       contador++;
 
-      if (contador == 1500) {
+      if (contador == 3000) {
         printf("\033[46m[M3] Produto processado.\033[0m\r\n");
         xSemaphoreGive(sem_Produto3); // Produto pronto
         ocupando = pdFALSE;
