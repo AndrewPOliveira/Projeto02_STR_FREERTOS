@@ -195,7 +195,7 @@ void vMaquina2(void * argument) {
       if (xSemaphoreTake(sem_ProdutoDepositado_M2, pdMS_TO_TICKS(1)) == pdTRUE) {
         ocupando = pdTRUE;
         contador = 0;
-        printf("\033[43m\[M2] Produto recebido. Iniciando processamento...\033[0m\\r\n");
+        printf("\033[43m\[M2] Produto recebido. Iniciando processamento...\033[0m\r\n");
       }
     }
 
@@ -204,7 +204,7 @@ void vMaquina2(void * argument) {
       contador++;
 
       if (contador == 1500) {
-        printf("\033[43m\[M2] Produto processado.\033[0m\\r\n");
+        printf("\033[43m\[M2] Produto processado.\033[0m\r\n");
         xSemaphoreGive(sem_Produto2); // Produto pronto
         ocupando = pdFALSE;
       }
