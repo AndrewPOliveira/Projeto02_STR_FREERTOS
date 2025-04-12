@@ -60,3 +60,8 @@ bash run.sh
 <p align="center">
   <img src=https://github.com/AndrewPOliveira/Projeto02_STR_FREERTOS/blob/db9bc4a389eef48a8d631a199edeae3eb6d4c6d0/Img/C%C3%A9lulaDeManufatura.png alt="Descrição do processo."/>
 </p>
+
+<p align="justify"> O sistema simula o funcionamento de um processo industrial de manufatura, onde há a entrada do material e a saída da manufatura, passando por três máquinas e quatro robôs. As máquinas M1 e M2 produzem um item a cada 1.5 segundos, enquanto que a M3 produz um item a cada 3 segundos. Como podemos ver na imagem acima dois robôs estão entre a M1 e a M2 e M3, mas a M1 só pode ser acessada por um robô de cada vez e os seus depósitos só podem armazenar um item por vez, a máquina devendo parar enquanto não tiver o seu depósito esvaziado. 
+
+
+<p align="justify"> Os robôs necessitam de 0.5 segundos para se movimentar de um depósito para outro, com exceção do R3 que leva 0.8 de trajeto. Com esse problema foi proposto soluções de utilizando dos conceitos de microkernel, tasks, sincronização e semaforos para implementação do correta da solução para esse sistema proposto
